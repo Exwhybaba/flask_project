@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container">
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    {% if message %}
+        <p style="color: green;">{{ message }}</p>
+    {% endif %}
+    
+    <form id="auth-form" action="{{ url_for('login') }}" method="post">
+        <input 
+            type="text" 
+            name="username" 
+            placeholder="Username" 
+            class="input-field" 
+        />
+        <input 
+            type="password"
+            name="password" 
+            placeholder="Password" 
+            class="input-field"
+        />
+        <input 
+            type="submit" 
+            value="Login" 
+            class="btn btn-login" 
+            onclick="setFormAction('login')"  
+        />
+        <input 
+            type="button" 
+            value="Register" 
+            class="btn btn-register" 
+            onclick="showRegisterForm()" 
+        />
+    </form>
+
+    <!-- Registration Form -->
+    <div id="register-form" style="display: none;">
+        <form id="registration-form" action="{{ url_for('register') }}" method="post">
+            <input 
+                type="text" 
+                name="username" 
+                placeholder="Username" 
+                class="input-field" 
+            />
+            <input 
+                type="password"
+                name="password" 
+                placeholder="Password" 
+                class="input-field"
+            />
+            <input 
+                type="password"
+                name="password_confirmation"
+                placeholder="Confirm Password"
+                class="input-field"
+            />
+            <input 
+                type="email"
+                name="email"
+                placeholder="Email"
+                class="input-field"
+            />
+            <input 
+                type="text"
+                name="company"
+                placeholder="Company Name"
+                class="input-field"
+            />
+            <input 
+                type="submit" 
+                value="Register" 
+                class="btn btn-register"
+            />
+            <input 
+                type="button" 
+                value="Cancel" 
+                class="btn btn-cancel" 
+                onclick="hideRegisterForm()"
+            />
+        </form>
+    </div>
+</div>
+
+<script>
+    function showRegisterForm() {
+        document.getElementById('auth-form').style.display = 'none';
+        document.getElementById('register-form').style.display = 'block';
+    }
+
+    function hideRegisterForm() {
+        document.getElementById('register-form').style.display = 'none';
+        document.getElementById('auth-form').style.display = 'block';
+    }
+
+    function setFormAction(action) {
+        var form = document.getElementById('auth-form');
+        if (action === 'login') {
+            form.action = "{{ url_for('login') }}";
+            form.method = "post";
+            form.submit();
+        }
+    }
+</script>
+{% endblock %}
