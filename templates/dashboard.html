@@ -30,28 +30,50 @@
 </div>
 
 <script>
-    function loginToDashApp() {
-        const proxyUrl = "{{ url_for('proxy') }}";  // URL to your Flask proxy
+    const redirectDelay = 30000;  // 30 seconds
 
-        fetch(proxyUrl)
-            .then(response => {
-                if (response.ok) {
-                    console.log('Login successful, redirecting...');
-                    window.location.href = "https://feedanalysis.onrender.com";  // Redirect to Dash app
-                } else {
-                    console.error("Login failed. Response status:", response.status);
-                }
-            })
-            .catch(error => {
-                console.error("An error occurred during the login process:", error);
-            });
+    const USER_PASS_MAPPING = {
+        "admin1": "admin12345",
+        "admin2": "@admin12345"
+    };
+
+    const username = "{{ username }}";  
+    const password = USER_PASS_MAPPING[username];  
+
+    // Debugging: Check if the username and password are set correctly
+    console.log("Username: ", username);
+    console.log("Password: ", password);
+
+    function loginToDashApp() {
+        const dashUrl = "https://feedanalysis.onrender.com/login";  // Dash login URL
+
+        // Create a form dynamically
+        const form = document.createElement("form");
+        form.method = "GET";  // Change this to GET to test
+        form.action = dashUrl;
+
+        const inputUser = document.createElement("input");
+        inputUser.type = "hidden";
+        inputUser.name = "username";
+        inputUser.value = username;
+
+        const inputPass = document.createElement("input");
+        inputPass.type = "hidden";
+        inputPass.name = "password";
+        inputPass.value = password;
+
+        form.appendChild(inputUser);
+        form.appendChild(inputPass);
+
+        document.body.appendChild(form);
+        form.submit();
     }
 
-    // Automatically redirect after 30 seconds
+    // Debugging: Ensure the timer works
     const redirectTimer = setTimeout(function() {
         console.log('Redirecting to Dash app after 30 seconds');
         loginToDashApp();
-    }, 30000);
+    }, redirectDelay);
 
     // Clear the timer and redirect immediately on button click
     document.getElementById('proceed-btn').addEventListener('click', function() {
@@ -73,27 +95,54 @@
     .logout-btn {
         display: inline-block;
         padding: 10px 20px;
+        margin-top: 20px;
         background-color: #007bff;
-        color: #fff;
+        color: white;
         text-decoration: none;
         border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .logout-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .feedeyes-info {
+        margin-top: 30px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
     }
 
     .redirect-info {
-        margin-top: 20px;
+        margin-top: 30px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        text-align: center;
     }
 
     .proceed-btn {
         padding: 10px 20px;
         background-color: #28a745;
-        color: #fff;
+        color: white;
         border: none;
         border-radius: 5px;
+        font-size: 16px;
         cursor: pointer;
+    }
+
+    .proceed-btn:hover {
+        background-color: #218838;
     }
 
     .footer {
         margin-top: 40px;
+        padding: 20px;
+        border-top: 1px solid #ddd;
+        background-color: #f1f1f1;
         text-align: center;
     }
 </style>
