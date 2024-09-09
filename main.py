@@ -137,7 +137,6 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('home'))
 
-
 # Route to handle proxying the login request to the Dash app
 @app.route('/proxy')
 def proxy():
