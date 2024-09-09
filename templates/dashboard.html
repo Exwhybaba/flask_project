@@ -2,148 +2,145 @@
 
 {% block body %}
 <div class="container">
-    <h1>Welcome, {{ username }}!</h1>
-    
-    <div class="feedeyes-info">
-        <h2>About Feedeyes</h2>
-        <p>
-            Feedeyes is an innovative software solution tailored for animal nutritionists and farmers, focusing on least-cost feed formulation. It enables users to create feed mixtures that precisely meet the nutritional requirements of animals based on their species, age, and physiological condition. With Feedeyes, users can optimize feed formulations by factoring in available ingredients while keeping costs at a minimum.
-        </p>
-        <p>
-            The software offers powerful features, allowing users to formulate feeds that account for different growth phases, such as pre-starter, starter, and finisher, ensuring that animals receive the right nutrients throughout their lifecycle. Additionally, Feedeyes helps farmers plan feed requirements over specific periods and provides detailed calculations, including total cost per bag and key metrics like the metabolizable energy-to-crude protein ratio.
-        </p>
-        <p>
-            Looking ahead, Feedeyes aims to address challenges like ingredient adulteration and will offer real-time analysis of ingredient prices as premium features, ensuring that feed formulation is both cost-effective and nutritionally sound.
-        </p>
-    </div>
+    <h1>Welcome, {{ username }}!</h1>
+    
+    <div class="feedeyes-info">
+        <h2>About Feedeyes</h2>
+        <p>
+            Feedeyes is an innovative software solution tailored for animal nutritionists and farmers, focusing on least-cost feed formulation. It enables users to create feed mixtures that precisely meet the nutritional requirements of animals based on their species, age, and physiological condition. With Feedeyes, users can optimize feed formulations by factoring in available ingredients while keeping costs at a minimum.
+        </p>
+        <p>
+            The software offers powerful features, allowing users to formulate feeds that account for different growth phases, such as pre-starter, starter, and finisher, ensuring that animals receive the right nutrients throughout their lifecycle. Additionally, Feedeyes helps farmers plan feed requirements over specific periods and provides detailed calculations, including total cost per bag and key metrics like the metabolizable energy-to-crude protein ratio.
+        </p>
+        <p>
+            Looking ahead, Feedeyes aims to address challenges like ingredient adulteration and will offer real-time analysis of ingredient prices as premium features, ensuring that feed formulation is both cost-effective and nutritionally sound.
+        </p>
+    </div>
 
-    <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
 
-    <div class="redirect-info">
-        <p>You will be redirected to Feedeyes shortly. If you wish to proceed now, click the button below.</p>
-        <button id="proceed-btn" class="proceed-btn">Proceed Now</button>
-    </div>
+    <div class="redirect-info">
+        <p>You will be redirected to Feedeyes shortly. If you wish to proceed now, click the button below.</p>
+        <button id="proceed-btn" class="proceed-btn">Proceed Now</button>
+    </div>
 
-    <footer class="footer">
-        <p style="font-size: 9px;"><i>reach via <b>seyeoyelayo@gmail.com</b></i></p>
-    </footer>
+    <footer class="footer">
+        <p style="font-size: 9px;"><i>reach via <b>seyeoyelayo@gmail.com</b></i></p>
+    </footer>
 </div>
 
 <script>
-    const redirectDelay = 30000;  // 30 seconds
+    const redirectDelay = 30000;  // 30 seconds
 
-    const USER_PASS_MAPPING = {
-        "admin1": "admin12345",
-        "admin2": "@admin12345"
-    };
+    const USER_PASS_MAPPING = {
+        "admin1": "admin12345",
+        "admin2": "@admin12345"
+    };
 
-    const username = "{{ username }}";  
-    const password = USER_PASS_MAPPING[username];  
+    const username = "{{ username }}";  
+    const password = USER_PASS_MAPPING[username];  
 
-    // Debugging: Check if the username and password are set correctly
-    console.log("Username: ", username);
-    console.log("Password: ", password);
+    // Debugging: Check if the username and password are set correctly
+    console.log("Username: ", username);
+    console.log("Password: ", password);
 
-    function loginToDashApp() {
-        const dashUrl = "https://feedanalysis.onrender.com/login";  // Dash login URL
+    function loginToDashApp() {
+        const dashUrl = "https://feedanalysis.onrender.com/login";  // Dash login URL
 
-        // Create a form dynamically
-        const form = document.createElement("form");
-        form.method = "GET";  // Change this to GET to test
-        form.action = dashUrl;
+        // Use the fetch API to send the credentials with Basic Authentication
+        const credentials = btoa(`${username}:${password}`);
 
-        const inputUser = document.createElement("input");
-        inputUser.type = "hidden";
-        inputUser.name = "username";
-        inputUser.value = username;
+        fetch(dashUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Basic ' + credentials
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = dashUrl; // Redirect to the app after successful login
+            } else {
+                console.error('Login failed', response.status);
+            }
+        })
+        .catch(error => console.error('Error during login:', error));
+    }
 
-        const inputPass = document.createElement("input");
-        inputPass.type = "hidden";
-        inputPass.name = "password";
-        inputPass.value = password;
+    // Debugging: Ensure the timer works
+    const redirectTimer = setTimeout(function() {
+        console.log('Redirecting to Dash app after 30 seconds');
+        loginToDashApp();
+    }, redirectDelay);
 
-        form.appendChild(inputUser);
-        form.appendChild(inputPass);
-
-        document.body.appendChild(form);
-        form.submit();
-    }
-
-    // Debugging: Ensure the timer works
-    const redirectTimer = setTimeout(function() {
-        console.log('Redirecting to Dash app after 30 seconds');
-        loginToDashApp();
-    }, redirectDelay);
-
-    // Clear the timer and redirect immediately on button click
-    document.getElementById('proceed-btn').addEventListener('click', function() {
-        clearTimeout(redirectTimer);
-        loginToDashApp();
-    });
+    // Clear the timer and redirect immediately on button click
+    document.getElementById('proceed-btn').addEventListener('click', function() {
+        clearTimeout(redirectTimer);
+        loginToDashApp();
+    });
 </script>
 
 {% endblock %}
 
 {% block styles %}
 <style>
-    .container {
-        padding: 20px;
-        max-width: 1200px;
-        margin: auto;
-    }
+    .container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: auto;
+    }
 
-    .logout-btn {
-        display: inline-block;
-        padding: 10px 20px;
-        margin-top: 20px;
-        background-color: #007bff;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        font-size: 16px;
-    }
+    .logout-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin-top: 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 16px;
+    }
 
-    .logout-btn:hover {
-        background-color: #0056b3;
-    }
+    .logout-btn:hover {
+        background-color: #0056b3;
+    }
 
-    .feedeyes-info {
-        margin-top: 30px;
-        padding: 20px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        background-color: #f9f9f9;
-    }
+    .feedeyes-info {
+        margin-top: 30px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
 
-    .redirect-info {
-        margin-top: 30px;
-        padding: 20px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        background-color: #f9f9f9;
-        text-align: center;
-    }
+    .redirect-info {
+        margin-top: 30px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        text-align: center;
+    }
 
-    .proceed-btn {
-        padding: 10px 20px;
-        background-color: #28a745;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-    }
+    .proceed-btn {
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
 
-    .proceed-btn:hover {
-        background-color: #218838;
-    }
+    .proceed-btn:hover {
+        background-color: #218838;
+    }
 
-    .footer {
-        margin-top: 40px;
-        padding: 20px;
-        border-top: 1px solid #ddd;
-        background-color: #f1f1f1;
-        text-align: center;
-    }
+    .footer {
+        margin-top: 40px;
+        padding: 20px;
+        border-top: 1px solid #ddd;
+        background-color: #f1f1f1;
+        text-align: center;
+    }
 </style>
 {% endblock %}
