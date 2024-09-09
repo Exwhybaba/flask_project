@@ -137,25 +137,7 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('home'))
 
-# Route to handle proxying the login request to the Dash app
-@app.route('/proxy')
-def proxy():
-    # Use default credentials
-    username = "admin1"
-    password = "admin12345"
-    
-    # Create the Basic Auth token
-    auth = (username, password)
-    
-    # Send request to Dash app
-    response = requests.get('https://feedanalysis.onrender.com', auth=auth)
-    
-    # Check if the request was successful
-    if response.status_code == 200:
-        # Redirect the user to the Dash app after successful authentication
-        return redirect('https://feedanalysis.onrender.com')
-    else:
-        return "Login failed", 401
+
 
 # Initialize the database
 if __name__ == '__main__':
